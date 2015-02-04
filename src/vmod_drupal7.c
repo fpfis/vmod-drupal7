@@ -24,6 +24,7 @@ vmod_session_name(struct sess *sp, const char *host, const char *base_path) {
 	unsigned char *session_name;
 	SHA256_CTX *sha256_ctx;
 	unsigned char *digest;
+	signed int format_result;
 
 	// We need 4 characters for "SESS" + the first 32 characters of the SHA256 hash + \0.
 	session_name = (unsigned char *)WS_Alloc(sp->wrk->ws, 37);
@@ -53,13 +54,18 @@ vmod_session_name(struct sess *sp, const char *host, const char *base_path) {
 	SHA256_Final(digest, sha256_ctx);
 	// ... and express its first 128 bytes (Big Endian-wise) as 16 pairs of
 	// hexadecimal digits.
-	snprintf(
+	format_result = snprintf(
 		session_name,
 		37,
 		"SESS%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
 		digest[0], digest[1], digest[2], digest[3], digest[4], digest[5], digest[6], digest[7],
 		digest[8], digest[9], digest[10], digest[11], digest[12], digest[13], digest[14], digest[15]
 	);
+	// We do not expect snprintf() to return anything else than "I have written 36 chars".
+	if (format_result != 36) {
+		VSL(SLT_Debug, 0, "drupal7-vmod: snprintf failed (returned %d) to format session name, abort", format_result);
+		return NULL;
+	}
 
 	return session_name;
 }
