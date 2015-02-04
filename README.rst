@@ -43,11 +43,6 @@ Example
 INSTALLATION
 ============
 
-This is an drupal7 skeleton for developing out-of-tree Varnish
-vmods available from the 3.0 release. It implements the "Hello, World!" 
-as a vmod callback. Not particularly useful in good hello world 
-tradition,but demonstrates how to get the glue around a vmod working.
-
 The source tree is based on autotools to configure the building, and
 does also have the necessary bits in place to do functional unit tests
 using the varnishtest tool.
@@ -82,8 +77,7 @@ In your VCL you could then use this vmod along the following lines::
 HISTORY
 =======
 
-This manual page was released as part of the libvmod-drupal7 package,
-demonstrating how to create an out-of-tree Varnish vmod.
+This manual page was released as part of the libvmod-drupal7 package.
 
 For further drupal7s and inspiration check out the vmod directory:
 
