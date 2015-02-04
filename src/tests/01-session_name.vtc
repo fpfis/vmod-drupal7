@@ -10,6 +10,10 @@ varnish v1 -vcl+backend {
     sub vcl_deliver {
         set resp.http.X-Session-Name1 = drupal7.session_name("foo.com", "/bar");
         set resp.http.X-Session-Name2 = drupal7.session_name("foo.com", "");
+        # Test with non-existent headers, so the C function receives NULL arguments.
+        set resp.http.X-Session-Name3 = drupal7.session_name("foo.com", req.http.X-Non-Existent);
+        set resp.http.X-Session-Name4 = drupal7.session_name(req.http.X-Non-Existent, "/bar");
+        set resp.http.X-Session-Name5 = drupal7.session_name(req.http.X-Non-Existent, req.http.X-Non-Existent);
     }
 } -start
 
@@ -18,6 +22,8 @@ client c1 {
     rxresp
     expect resp.http.X-Session-Name1 == "SESSd3a26f03b9eea93e22f3f613330b3611"
     expect resp.http.X-Session-Name2 == "SESSf29b6dda0984901faa692dc84e8a7392"
+    # Passing a non-existent header should be equivalent to passing an empty string.
+    expect resp.http.X-Session-Name3 == resp.http.X-Session-Name2
 }
 
 client c1 -run

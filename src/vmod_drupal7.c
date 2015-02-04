@@ -48,8 +48,12 @@ vmod_session_name(struct sess *sp, const char *host, const char *base_path) {
 	// Initialize a SHA256 context.
 	SHA256_Init(sha256_ctx);
 	// Fill it with the host and base path.
-	SHA256_Update(sha256_ctx, host, strlen(host));
-	SHA256_Update(sha256_ctx, base_path, strlen(base_path));
+	if (host != NULL) {
+		SHA256_Update(sha256_ctx, host, strlen(host));
+	}
+	if (base_path != NULL) {
+		SHA256_Update(sha256_ctx, base_path, strlen(base_path));
+	}
 	// Retrieve the resulting SHA256 digest...
 	SHA256_Final(digest, sha256_ctx);
 	// ... and express its first 128 bytes (Big Endian-wise) as 16 pairs of
