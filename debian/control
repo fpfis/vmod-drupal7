@@ -1,0 +1,12 @@
+Source: libvmod-drupal7
+Section: web
+Priority: extra
+Maintainer: Xavier Guerrin <xavier@tuxfamily.org>
+Build-Depends: debhelper (>= 7), build-essential, python-docutils
+Standards-Version: 3.8.1
+Vcs-Git: https://gitorious.org/libvmod-drupal7/libvmod-drupal7.git
+
+Package: libvmod-drupal7
+Architecture: any
+Depends: varnish, ${Varnish:ABI}, ${misc:Depends}
+Description: Drupal 7 Varnish vmod; provides Drupal-related functions within Varnish.

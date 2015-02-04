@@ -1,0 +1,23 @@
+varnishtest "Test drupal7 vmod session_name function"
+
+server s1 {
+    rxreq
+    txresp
+} -start
+
+varnish v1 -vcl+backend {
+    import drupal7 from "${vmod_topbuild}/src/.libs/libvmod_drupal7.so";
+    sub vcl_deliver {
+        set resp.http.X-Session-Name1 = drupal7.session_name("foo.com", "/bar");
+        set resp.http.X-Session-Name2 = drupal7.session_name("foo.com", "");
+    }
+} -start
+
+client c1 {
+    txreq -url "/"
+    rxresp
+    expect resp.http.X-Session-Name1 == "SESSd3a26f03b9eea93e22f3f613330b3611"
+    expect resp.http.X-Session-Name2 == "SESSf29b6dda0984901faa692dc84e8a7392"
+}
+
+client c1 -run

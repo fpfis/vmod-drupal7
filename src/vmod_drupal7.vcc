@@ -1,0 +1,3 @@
+Module drupal7
+Init init_function
+Function STRING session_name(STRING, STRING)
