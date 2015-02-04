@@ -21,7 +21,7 @@ init_function(struct vmod_priv *priv, const struct VCL_conf *conf)
  */
 const char *
 vmod_session_name(struct sess *sp, const char *host, const char *base_path) {
-	char *session_name;
+	unsigned char *session_name;
 	SHA256_CTX *sha256_ctx;
 	unsigned char *digest;
 
