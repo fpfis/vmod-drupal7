@@ -1,6 +1,7 @@
 $Module drupal7 3 Drupal 7 VMOD
 Drupal 7 Varnish vmod; provides Drupal-related functions within Varnish.
 
+$Init init_function
 $Function STRING session_name(STRING, STRING)
 
 Prototype
