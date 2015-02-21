@@ -45,25 +45,26 @@ INSTALLATION
 
 The source tree is based on autotools to configure the building, and
 does also have the necessary bits in place to do functional unit tests
-using the varnishtest tool.
+using the ``varnishtest`` tool.
+
+Building requires the Varnish header files and uses pkg-config to find
+the necessary paths.
+
+If you have installed Varnish to a non-standard directory, you may need to
+override PKG_CONFIG_PATH so configure can find varnishapi.pc.
 
 Usage::
 
- ./configure VARNISHSRC=DIR [VMODDIR=DIR]
+ ./autogen.sh
+ ./configure
 
-`VARNISHSRC` is the directory of the Varnish source tree for which to
-compile your vmod. Both the `VARNISHSRC` and `VARNISHSRC/include`
-will be added to the include search paths for your module.
-
-Optionally you can also set the vmod install directory by adding
-`VMODDIR=DIR` (defaults to the pkg-config discovered directory from your
-Varnish installation).
 
 Make targets:
 
-* make - builds the vmod
-* make install - installs your vmod in `VMODDIR`
+* make - builds the vmod.
+* make install - installs your vmod.
 * make check - runs the unit tests in ``src/tests/*.vtc``
+* make distcheck - run check and prepare a tarball of the vmod.
 
 In your VCL you could then use this vmod along the following lines::
         
@@ -73,15 +74,6 @@ In your VCL you could then use this vmod along the following lines::
                 # This sets resp.http.X-Session-Name to the session name for foo.com/bar
                 set resp.http.X-Session-Name = drupal7.session_name("foo.com", "/bar");
         }
-
-HISTORY
-=======
-
-This manual page was released as part of the libvmod-drupal7 package.
-
-For further drupal7s and inspiration check out the vmod directory:
-
-    https://www.varnish-cache.org/vmods
 
 COPYRIGHT
 =========

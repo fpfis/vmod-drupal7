@@ -1,10 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
 
 
 #include "vrt.h"
-#include "include/vsha256.h"
-#include "bin/varnishd/cache.h"
+#include "vsha256.h"
+#include "cache/cache.h"
 
 #include "vcc_if.h"
 
@@ -20,27 +21,27 @@ init_function(struct vmod_priv *priv, const struct VCL_conf *conf)
  * This function is equivalent to suffixing SESS with the result of:
  * php -r 'echo substr(hash("sha256", "domain/base-path"), 0, 32);'
  */
-const char *
-vmod_session_name(struct sess *sp, const char *host, const char *base_path) {
+VCL_STRING
+vmod_session_name(const struct vrt_ctx *ctx, VCL_STRING host, VCL_STRING base_path) {
 	char *session_name;
 	SHA256_CTX *sha256_ctx;
 	unsigned char *digest;
 	signed int format_result;
 
 	// We need 4 characters for "SESS" + the first 32 characters of the SHA256 hash + \0.
-	session_name = (char *)WS_Alloc(sp->wrk->ws, 37);
+	session_name = (char *)WS_Alloc(ctx->ws, 37);
 	if (session_name == NULL) {
 		VSL(SLT_Debug, 0, "drupal7-vmod: Unable to allocate return string to compute session name, abort");
 		return NULL;
 	}
 
-	sha256_ctx = (SHA256_CTX *)WS_Alloc(sp->wrk->ws, sizeof(SHA256_CTX));
+	sha256_ctx = (SHA256_CTX *)WS_Alloc(ctx->ws, sizeof(SHA256_CTX));
 	if (sha256_ctx == NULL) {
 		VSL(SLT_Debug, 0, "drupal7-vmod: Unable to allocate SHA256 context to compute session name, abort");
 		return NULL;
 	}
 
-	digest = (unsigned char *)WS_Alloc(sp->wrk->ws, 32);
+	digest = (unsigned char *)WS_Alloc(ctx->ws, 32);
 	if (digest == NULL) {
 		VSL(SLT_Debug, 0, "drupal7-vmod: Unable to allocate SHA256 digest to compute session name, abort");
 		return NULL;

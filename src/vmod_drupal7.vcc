@@ -1,3 +1,15 @@
-Module drupal7
-Init init_function
-Function STRING session_name(STRING, STRING)
+$Module drupal7 3 Drupal 7 VMOD
+Drupal 7 Varnish vmod; provides Drupal-related functions within Varnish.
+
+$Function STRING session_name(STRING, STRING)
+
+Prototype
+	::
+		session_name(STRING host, STRING base_path)
+Return value
+	STRING
+Description
+	Return the session name Drupal 7 would compute for host and base_path.
+Example
+	::
+		set resp.http.X-Session-Name = drupal7.session_name("foo.com", "/bar");
