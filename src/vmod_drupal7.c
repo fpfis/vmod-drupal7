@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
 #include "vrt.h"
 #include "include/vsha256.h"
 #include "bin/varnishd/cache.h"
@@ -21,13 +22,13 @@ init_function(struct vmod_priv *priv, const struct VCL_conf *conf)
  */
 const char *
 vmod_session_name(struct sess *sp, const char *host, const char *base_path) {
-	unsigned char *session_name;
+	char *session_name;
 	SHA256_CTX *sha256_ctx;
 	unsigned char *digest;
 	signed int format_result;
 
 	// We need 4 characters for "SESS" + the first 32 characters of the SHA256 hash + \0.
-	session_name = (unsigned char *)WS_Alloc(sp->wrk->ws, 37);
+	session_name = (char *)WS_Alloc(sp->wrk->ws, 37);
 	if (session_name == NULL) {
 		VSL(SLT_Debug, 0, "drupal7-vmod: Unable to allocate return string to compute session name, abort");
 		return NULL;
