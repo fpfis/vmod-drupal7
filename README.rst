@@ -81,4 +81,4 @@ COPYRIGHT
 This document is licensed under the same license as the
 libvmod-drupal7 project. See LICENSE for details.
 
-* Copyright (c) 2015 Xavier Guerrin
+* Copyright (c) 2015-2016 Xavier Guerrin
