@@ -1,0 +1,36 @@
+varnishtest "Test drupal7 vmod"
+
+server s1 {
+       rxreq
+       txresp
+} -start
+
+varnish v1 -vcl+backend {
+	import std;
+	import ${vmod_drupal7};
+
+	sub vcl_init {
+		std.log(drupal7.info());
+	}
+
+	sub vcl_deliver {
+		set resp.http.hello = drupal7.hello("World");
+		set resp.http.info = drupal7.info();
+	}
+} -start
+
+logexpect l1 -v v1 -g raw -d 1 {
+	expect 0 0    CLI     {^Rd vcl.load}
+	expect 0 =    VCL_Log {^vmod_drupal7 loaded at }
+} -start
+
+client c1 {
+	txreq -url "/"
+	rxresp
+	expect resp.http.hello == "Hello, World"
+	expect resp.http.info  ~  "^vmod_drupal7 warmed at "
+}
+
+client c1 -run
+
+logexpect l1 -wait
